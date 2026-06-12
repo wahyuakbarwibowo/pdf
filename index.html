@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Toolbox — Merge, Reorder & Compress (100% in your browser)</title>
+  <meta name="description" content="Free client-side PDF tools. Merge, reorder pages, and compress PDFs entirely in your browser. No upload, no server, your files never leave your device." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1 class="logo">📄 PDF Toolbox</h1>
+      <p class="tagline">Merge, reorder & compress PDFs — 100% in your browser. Files never leave your device.</p>
+    </div>
+  </header>
+
+  <nav class="tabs container" role="tablist">
+    <button class="tab active" data-tab="merge" role="tab" aria-selected="true">🔗 Merge</button>
+    <button class="tab" data-tab="reorder" role="tab" aria-selected="false">🔀 Reorder Pages</button>
+    <button class="tab" data-tab="compress" role="tab" aria-selected="false">🗜️ Compress</button>
+  </nav>
+
+  <main class="container">
+
+    <!-- ============ MERGE ============ -->
+    <section id="panel-merge" class="panel active" role="tabpanel">
+      <div class="dropzone" id="merge-dropzone">
+        <input type="file" id="merge-input" accept="application/pdf,.pdf" multiple hidden />
+        <p class="dz-icon">📂</p>
+        <p>Drop PDF files here or <button class="link-btn" data-for="merge-input">browse</button></p>
+        <p class="dz-hint">Add two or more PDFs, then drag to set the order.</p>
+      </div>
+
+      <ul id="merge-list" class="file-list" aria-label="Files to merge"></ul>
+
+      <div class="actions hidden" id="merge-actions">
+        <button id="merge-btn" class="btn primary">Merge PDFs</button>
+        <button id="merge-clear" class="btn ghost">Clear all</button>
+      </div>
+      <p id="merge-status" class="status" role="status"></p>
+    </section>
+
+    <!-- ============ REORDER ============ -->
+    <section id="panel-reorder" class="panel" role="tabpanel">
+      <div class="dropzone" id="reorder-dropzone">
+        <input type="file" id="reorder-input" accept="application/pdf,.pdf" hidden />
+        <p class="dz-icon">📑</p>
+        <p>Drop a PDF here or <button class="link-btn" data-for="reorder-input">browse</button></p>
+        <p class="dz-hint">Drag page thumbnails to reorder. Click ✕ to remove a page.</p>
+      </div>
+
+      <div id="reorder-meta" class="file-meta hidden"></div>
+      <div id="reorder-grid" class="page-grid" aria-label="Pages"></div>
+
+      <div class="actions hidden" id="reorder-actions">
+        <button id="reorder-save" class="btn primary">Save PDF</button>
+        <button id="reorder-reset" class="btn ghost">Reset order</button>
+        <button id="reorder-clear" class="btn ghost">Remove file</button>
+      </div>
+      <p id="reorder-status" class="status" role="status"></p>
+    </section>
+
+    <!-- ============ COMPRESS ============ -->
+    <section id="panel-compress" class="panel" role="tabpanel">
+      <div class="dropzone" id="compress-dropzone">
+        <input type="file" id="compress-input" accept="application/pdf,.pdf" hidden />
+        <p class="dz-icon">🗜️</p>
+        <p>Drop a PDF here or <button class="link-btn" data-for="compress-input">browse</button></p>
+        <p class="dz-hint">Pages are re-rendered as images — text becomes non-selectable. Best for scanned/image-heavy PDFs.</p>
+      </div>
+
+      <div id="compress-meta" class="file-meta hidden"></div>
+
+      <div class="options hidden" id="compress-options">
+        <fieldset>
+          <legend>Compression level</legend>
+          <label><input type="radio" name="quality" value="low" /> <strong>Strong</strong> <span class="opt-hint">smallest file, lower quality</span></label>
+          <label><input type="radio" name="quality" value="medium" checked /> <strong>Balanced</strong> <span class="opt-hint">good quality, smaller file</span></label>
+          <label><input type="radio" name="quality" value="high" /> <strong>Light</strong> <span class="opt-hint">best quality, modest savings</span></label>
+        </fieldset>
+      </div>
+
+      <div class="actions hidden" id="compress-actions">
+        <button id="compress-btn" class="btn primary">Compress PDF</button>
+        <button id="compress-clear" class="btn ghost">Remove file</button>
+      </div>
+      <p id="compress-status" class="status" role="status"></p>
+      <div id="compress-result" class="result hidden"></div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>All processing happens locally in your browser using
+        <a href="https://pdf-lib.js.org/" target="_blank" rel="noopener">pdf-lib</a> and
+        <a href="https://mozilla.github.io/pdf.js/" target="_blank" rel="noopener">PDF.js</a>.
+        No files are uploaded anywhere.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
