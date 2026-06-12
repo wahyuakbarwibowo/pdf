@@ -39,6 +39,15 @@ main.container { flex: 1; }
   padding: 2rem 0 1rem;
   text-align: center;
 }
+.site-header .container { position: relative; }
+.github-link {
+  position: absolute;
+  top: 0;
+  right: 1rem;
+  color: var(--text-dim);
+  transition: color 0.15s ease;
+}
+.github-link:hover { color: var(--text); }
 .logo { margin: 0; font-size: 1.8rem; }
 .tagline { margin: 0.4rem 0 0; color: var(--text-dim); font-size: 0.95rem; }
 
