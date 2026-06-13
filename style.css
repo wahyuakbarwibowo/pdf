@@ -186,10 +186,10 @@ main.container { flex: 1; }
   margin-top: 0.4rem;
   display: block;
 }
-.page-card .remove-page {
+.page-card .remove-page,
+.page-card .rotate-page {
   position: absolute;
   top: 0.3rem;
-  right: 0.3rem;
   background: rgba(0,0,0,0.6);
   color: #fff;
   border: none;
@@ -200,7 +200,10 @@ main.container { flex: 1; }
   cursor: pointer;
   font-size: 0.8rem;
 }
+.page-card .remove-page { right: 0.3rem; }
+.page-card .rotate-page { right: 2.1rem; }
 .page-card .remove-page:hover { background: var(--danger); }
+.page-card .rotate-page:hover { background: var(--accent); }
 
 /* ---------- Meta / options / actions ---------- */
 .file-meta {
@@ -214,7 +217,7 @@ main.container { flex: 1; }
 }
 .file-meta strong { color: var(--text); }
 
-.options { margin-top: 1.25rem; }
+.options { margin-top: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
 .options fieldset {
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -227,6 +230,75 @@ main.container { flex: 1; }
 .options legend { padding: 0 0.5rem; color: var(--text-dim); font-size: 0.9rem; }
 .options label { cursor: pointer; }
 .opt-hint { color: var(--text-dim); font-size: 0.85rem; margin-left: 0.3rem; }
+
+.options input[type="text"],
+.options input[type="password"] {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  width: 100%;
+  max-width: 420px;
+}
+.options input:focus { outline: none; border-color: var(--accent); }
+.options select {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 0.4rem 0.6rem;
+  font-size: 0.9rem;
+}
+.text-row { display: flex; flex-direction: column; gap: 0.3rem; }
+
+/* Image thumbnails in file lists */
+.file-thumb {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+/* ---------- Sign ---------- */
+.sign-pad-wrap { margin-top: 1.25rem; }
+.sign-label { color: var(--text-dim); font-size: 0.9rem; margin: 1.25rem 0 0.5rem; }
+#sign-pad {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  touch-action: none;
+  cursor: crosshair;
+  max-width: 100%;
+}
+#sign-preview-wrap {
+  margin-top: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: auto;
+  background: var(--surface);
+  text-align: center;
+}
+#sign-preview { max-width: 100%; height: auto; cursor: copy; display: inline-block; }
+#sign-width { vertical-align: middle; }
+
+/* ---------- OCR result ---------- */
+#ocr-result {
+  width: 100%;
+  margin-top: 1rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 0.8rem 1rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85rem;
+  resize: vertical;
+}
+#ocr-result:focus { outline: none; border-color: var(--accent); }
 
 .actions {
   display: flex;

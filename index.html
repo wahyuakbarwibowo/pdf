@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF Toolbox — Merge, Reorder & Compress (100% in your browser)</title>
-  <meta name="description" content="Free client-side PDF tools. Merge, reorder pages, and compress PDFs entirely in your browser. No upload, no server, your files never leave your device." />
+  <title>PDF Toolbox — Merge, Split, Compress & more (100% in your browser)</title>
+  <meta name="description" content="Free client-side PDF tools. Merge, split, reorder, compress, watermark, sign, OCR and protect PDFs entirely in your browser. No upload, your files never leave your device." />
 
   <!-- Open Graph (WhatsApp, Facebook, etc.) -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="PDF Toolbox" />
-  <meta property="og:title" content="PDF Toolbox — Merge, Reorder & Compress PDFs" />
-  <meta property="og:description" content="Free PDF tools that run 100% in your browser. Merge, reorder pages, and compress PDFs — no upload, your files never leave your device." />
+  <meta property="og:title" content="PDF Toolbox — Merge, Split, Compress & more" />
+  <meta property="og:description" content="Free PDF tools that run 100% in your browser. Merge, split, reorder, compress, watermark, sign, OCR and protect PDFs — no upload, your files never leave your device." />
   <meta property="og:url" content="https://wahyuakbarwibowo.github.io/pdf/" />
   <meta property="og:image" content="https://wahyuakbarwibowo.github.io/pdf/og-image.jpg" />
   <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="PDF Toolbox — free in-browser PDF merge, reorder and compress tools" />
+  <meta property="og:image:alt" content="PDF Toolbox — free in-browser PDF tools" />
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="PDF Toolbox — Merge, Reorder & Compress PDFs" />
+  <meta name="twitter:title" content="PDF Toolbox — Merge, Split, Compress & more" />
   <meta name="twitter:description" content="Free PDF tools that run 100% in your browser. No upload, your files never leave your device." />
   <meta name="twitter:image" content="https://wahyuakbarwibowo.github.io/pdf/og-image.jpg" />
 
@@ -37,14 +37,22 @@
         </svg>
       </a>
       <h1 class="logo">📄 PDF Toolbox</h1>
-      <p class="tagline">Merge, reorder & compress PDFs — 100% in your browser. Files never leave your device.</p>
+      <p class="tagline">Free PDF tools — 100% in your browser. Files never leave your device.</p>
     </div>
   </header>
 
   <nav class="tabs container" role="tablist">
     <button class="tab active" data-tab="merge" role="tab" aria-selected="true">🔗 Merge</button>
-    <button class="tab" data-tab="reorder" role="tab" aria-selected="false">🔀 Reorder Pages</button>
+    <button class="tab" data-tab="split" role="tab" aria-selected="false">✂️ Split</button>
+    <button class="tab" data-tab="reorder" role="tab" aria-selected="false">🔀 Reorder</button>
     <button class="tab" data-tab="compress" role="tab" aria-selected="false">🗜️ Compress</button>
+    <button class="tab" data-tab="img2pdf" role="tab" aria-selected="false">🖼️ Images → PDF</button>
+    <button class="tab" data-tab="pdf2img" role="tab" aria-selected="false">📷 PDF → Images</button>
+    <button class="tab" data-tab="watermark" role="tab" aria-selected="false">💧 Watermark</button>
+    <button class="tab" data-tab="sign" role="tab" aria-selected="false">✍️ Sign</button>
+    <button class="tab" data-tab="ocr" role="tab" aria-selected="false">🔎 OCR</button>
+    <button class="tab" data-tab="protect" role="tab" aria-selected="false">🔐 Protect</button>
+    <button class="tab" data-tab="metadata" role="tab" aria-selected="false">🏷️ Metadata</button>
   </nav>
 
   <main class="container">
@@ -67,13 +75,42 @@
       <p id="merge-status" class="status" role="status"></p>
     </section>
 
+    <!-- ============ SPLIT ============ -->
+    <section id="panel-split" class="panel" role="tabpanel">
+      <div class="dropzone" id="split-dropzone">
+        <input type="file" id="split-input" accept="application/pdf,.pdf" hidden />
+        <p class="dz-icon">✂️</p>
+        <p>Drop a PDF here or <button class="link-btn" data-for="split-input">browse</button></p>
+        <p class="dz-hint">Extract a page range, or split every page into its own file.</p>
+      </div>
+
+      <div id="split-meta" class="file-meta hidden"></div>
+
+      <div class="options hidden" id="split-options">
+        <fieldset>
+          <legend>Pages to extract</legend>
+          <label class="text-row">
+            <input type="text" id="split-range" placeholder="e.g. 1-3, 5, 8-10" />
+            <span class="opt-hint">Comma-separated pages and ranges, in output order.</span>
+          </label>
+        </fieldset>
+      </div>
+
+      <div class="actions hidden" id="split-actions">
+        <button id="split-extract" class="btn primary">Extract pages</button>
+        <button id="split-all" class="btn">Split all pages (ZIP)</button>
+        <button id="split-clear" class="btn ghost">Remove file</button>
+      </div>
+      <p id="split-status" class="status" role="status"></p>
+    </section>
+
     <!-- ============ REORDER ============ -->
     <section id="panel-reorder" class="panel" role="tabpanel">
       <div class="dropzone" id="reorder-dropzone">
         <input type="file" id="reorder-input" accept="application/pdf,.pdf" hidden />
         <p class="dz-icon">📑</p>
         <p>Drop a PDF here or <button class="link-btn" data-for="reorder-input">browse</button></p>
-        <p class="dz-hint">Drag page thumbnails to reorder. Click ✕ to remove a page.</p>
+        <p class="dz-hint">Drag thumbnails to reorder. ↻ rotates a page, ✕ removes it.</p>
       </div>
 
       <div id="reorder-meta" class="file-meta hidden"></div>
@@ -115,21 +152,282 @@
       <div id="compress-result" class="result hidden"></div>
     </section>
 
+    <!-- ============ IMAGES → PDF ============ -->
+    <section id="panel-img2pdf" class="panel" role="tabpanel">
+      <div class="dropzone" id="img2pdf-dropzone">
+        <input type="file" id="img2pdf-input" accept="image/*" multiple hidden />
+        <p class="dz-icon">🖼️</p>
+        <p>Drop images here or <button class="link-btn" data-for="img2pdf-input">browse</button></p>
+        <p class="dz-hint">JPG, PNG, WebP… one image per page. Drag to set the order.</p>
+      </div>
+
+      <ul id="img2pdf-list" class="file-list" aria-label="Images"></ul>
+
+      <div class="options hidden" id="img2pdf-options">
+        <fieldset>
+          <legend>Page size</legend>
+          <label><input type="radio" name="img2pdf-size" value="fit" checked /> <strong>Fit image</strong> <span class="opt-hint">page matches each image's size</span></label>
+          <label><input type="radio" name="img2pdf-size" value="a4" /> <strong>A4</strong> <span class="opt-hint">image centered on A4 with margins</span></label>
+        </fieldset>
+      </div>
+
+      <div class="actions hidden" id="img2pdf-actions">
+        <button id="img2pdf-btn" class="btn primary">Create PDF</button>
+        <button id="img2pdf-clear" class="btn ghost">Clear all</button>
+      </div>
+      <p id="img2pdf-status" class="status" role="status"></p>
+    </section>
+
+    <!-- ============ PDF → IMAGES ============ -->
+    <section id="panel-pdf2img" class="panel" role="tabpanel">
+      <div class="dropzone" id="pdf2img-dropzone">
+        <input type="file" id="pdf2img-input" accept="application/pdf,.pdf" hidden />
+        <p class="dz-icon">📷</p>
+        <p>Drop a PDF here or <button class="link-btn" data-for="pdf2img-input">browse</button></p>
+        <p class="dz-hint">Each page becomes an image. Multiple pages download as a ZIP.</p>
+      </div>
+
+      <div id="pdf2img-meta" class="file-meta hidden"></div>
+
+      <div class="options hidden" id="pdf2img-options">
+        <fieldset>
+          <legend>Output</legend>
+          <label>Format:
+            <select id="pdf2img-format">
+              <option value="png">PNG</option>
+              <option value="jpeg" selected>JPEG</option>
+            </select>
+          </label>
+          <label>Resolution:
+            <select id="pdf2img-scale">
+              <option value="1">Normal (72 DPI)</option>
+              <option value="2" selected>High (144 DPI)</option>
+              <option value="3">Very high (216 DPI)</option>
+            </select>
+          </label>
+        </fieldset>
+      </div>
+
+      <div class="actions hidden" id="pdf2img-actions">
+        <button id="pdf2img-btn" class="btn primary">Convert to images</button>
+        <button id="pdf2img-clear" class="btn ghost">Remove file</button>
+      </div>
+      <p id="pdf2img-status" class="status" role="status"></p>
+    </section>
+
+    <!-- ============ WATERMARK ============ -->
+    <section id="panel-watermark" class="panel" role="tabpanel">
+      <div class="dropzone" id="watermark-dropzone">
+        <input type="file" id="watermark-input" accept="application/pdf,.pdf" hidden />
+        <p class="dz-icon">💧</p>
+        <p>Drop a PDF here or <button class="link-btn" data-for="watermark-input">browse</button></p>
+        <p class="dz-hint">Add a text watermark and/or page numbers to every page.</p>
+      </div>
+
+      <div id="watermark-meta" class="file-meta hidden"></div>
+
+      <div class="options hidden" id="watermark-options">
+        <fieldset>
+          <legend>Watermark</legend>
+          <label class="text-row">
+            <input type="text" id="watermark-text" placeholder="e.g. CONFIDENTIAL (leave empty for none)" maxlength="60" />
+            <span class="opt-hint">Latin characters only (built-in PDF font).</span>
+          </label>
+          <label>Size:
+            <select id="watermark-size">
+              <option value="36">Small</option>
+              <option value="56" selected>Medium</option>
+              <option value="80">Large</option>
+            </select>
+          </label>
+          <label>Opacity:
+            <select id="watermark-opacity">
+              <option value="0.12">Subtle</option>
+              <option value="0.25" selected>Normal</option>
+              <option value="0.45">Strong</option>
+            </select>
+          </label>
+          <label><input type="checkbox" id="watermark-diagonal" checked /> Diagonal</label>
+        </fieldset>
+        <fieldset>
+          <legend>Page numbers</legend>
+          <label><input type="checkbox" id="watermark-pagenum" /> Add page numbers</label>
+          <label>Position:
+            <select id="watermark-pagenum-pos">
+              <option value="bottom-center" selected>Bottom center</option>
+              <option value="bottom-right">Bottom right</option>
+            </select>
+          </label>
+        </fieldset>
+      </div>
+
+      <div class="actions hidden" id="watermark-actions">
+        <button id="watermark-btn" class="btn primary">Apply & download</button>
+        <button id="watermark-clear" class="btn ghost">Remove file</button>
+      </div>
+      <p id="watermark-status" class="status" role="status"></p>
+    </section>
+
+    <!-- ============ SIGN ============ -->
+    <section id="panel-sign" class="panel" role="tabpanel">
+      <div class="dropzone" id="sign-dropzone">
+        <input type="file" id="sign-input" accept="application/pdf,.pdf" hidden />
+        <p class="dz-icon">✍️</p>
+        <p>Drop a PDF here or <button class="link-btn" data-for="sign-input">browse</button></p>
+        <p class="dz-hint">Draw your signature, then click on the page to place it.</p>
+      </div>
+
+      <div id="sign-workspace" class="hidden">
+        <div class="sign-pad-wrap">
+          <p class="sign-label">1. Draw your signature:</p>
+          <canvas id="sign-pad" width="400" height="150"></canvas>
+          <div class="actions" style="margin-top:0.5rem">
+            <button id="sign-pad-clear" class="btn ghost">Clear signature</button>
+            <label class="opt-hint">Size:
+              <input type="range" id="sign-width" min="10" max="60" value="30" /> <span id="sign-width-val">30</span>% of page width
+            </label>
+          </div>
+        </div>
+
+        <p class="sign-label">2. Click on the page to place it (click a placed signature to remove):</p>
+        <div class="actions" style="margin-top:0">
+          <button id="sign-prev" class="btn ghost">← Prev</button>
+          <span id="sign-page-label" class="opt-hint"></span>
+          <button id="sign-next" class="btn ghost">Next →</button>
+        </div>
+        <div id="sign-preview-wrap"><canvas id="sign-preview"></canvas></div>
+
+        <div class="actions">
+          <button id="sign-save" class="btn primary">Save signed PDF</button>
+          <button id="sign-clear" class="btn ghost">Remove file</button>
+        </div>
+      </div>
+      <p id="sign-status" class="status" role="status"></p>
+    </section>
+
+    <!-- ============ OCR ============ -->
+    <section id="panel-ocr" class="panel" role="tabpanel">
+      <div class="dropzone" id="ocr-dropzone">
+        <input type="file" id="ocr-input" accept="application/pdf,.pdf" hidden />
+        <p class="dz-icon">🔎</p>
+        <p>Drop a scanned PDF here or <button class="link-btn" data-for="ocr-input">browse</button></p>
+        <p class="dz-hint">Extracts text from scanned/image PDFs using Tesseract OCR. The OCR engine (~few MB) downloads on first use, then runs locally.</p>
+      </div>
+
+      <div id="ocr-meta" class="file-meta hidden"></div>
+
+      <div class="options hidden" id="ocr-options">
+        <fieldset>
+          <legend>Language</legend>
+          <label><input type="radio" name="ocr-lang" value="eng" checked /> English</label>
+          <label><input type="radio" name="ocr-lang" value="ind" /> Indonesian</label>
+          <label><input type="radio" name="ocr-lang" value="eng+ind" /> English + Indonesian</label>
+        </fieldset>
+      </div>
+
+      <div class="actions hidden" id="ocr-actions">
+        <button id="ocr-btn" class="btn primary">Extract text</button>
+        <button id="ocr-clear" class="btn ghost">Remove file</button>
+      </div>
+      <p id="ocr-status" class="status" role="status"></p>
+
+      <div id="ocr-result-wrap" class="hidden">
+        <textarea id="ocr-result" rows="12" spellcheck="false"></textarea>
+        <div class="actions">
+          <button id="ocr-download" class="btn">Download .txt</button>
+          <button id="ocr-copy" class="btn ghost">Copy to clipboard</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROTECT ============ -->
+    <section id="panel-protect" class="panel" role="tabpanel">
+      <div class="dropzone" id="protect-dropzone">
+        <input type="file" id="protect-input" accept="application/pdf,.pdf" hidden />
+        <p class="dz-icon">🔐</p>
+        <p>Drop a PDF here or <button class="link-btn" data-for="protect-input">browse</button></p>
+        <p class="dz-hint">Add a password to a PDF, or remove one (you must know the current password).</p>
+      </div>
+
+      <div id="protect-meta" class="file-meta hidden"></div>
+
+      <div class="options hidden" id="protect-options">
+        <fieldset id="protect-encrypt-fields">
+          <legend>Add password</legend>
+          <label class="text-row"><input type="password" id="protect-pw" placeholder="Password" autocomplete="new-password" /></label>
+          <label class="text-row"><input type="password" id="protect-pw2" placeholder="Confirm password" autocomplete="new-password" /></label>
+        </fieldset>
+        <fieldset id="protect-decrypt-fields" class="hidden">
+          <legend>Remove password</legend>
+          <label class="text-row"><input type="password" id="protect-current-pw" placeholder="Current password" autocomplete="off" /></label>
+        </fieldset>
+      </div>
+
+      <div class="actions hidden" id="protect-actions">
+        <button id="protect-encrypt-btn" class="btn primary">Add password</button>
+        <button id="protect-decrypt-btn" class="btn primary hidden">Remove password</button>
+        <button id="protect-clear" class="btn ghost">Remove file</button>
+      </div>
+      <p id="protect-status" class="status" role="status"></p>
+    </section>
+
+    <!-- ============ METADATA ============ -->
+    <section id="panel-metadata" class="panel" role="tabpanel">
+      <div class="dropzone" id="metadata-dropzone">
+        <input type="file" id="metadata-input" accept="application/pdf,.pdf" hidden />
+        <p class="dz-icon">🏷️</p>
+        <p>Drop a PDF here or <button class="link-btn" data-for="metadata-input">browse</button></p>
+        <p class="dz-hint">View and edit document properties (title, author, subject, keywords).</p>
+      </div>
+
+      <div id="metadata-meta" class="file-meta hidden"></div>
+
+      <div class="options hidden" id="metadata-options">
+        <fieldset>
+          <legend>Document properties</legend>
+          <label class="text-row">Title <input type="text" id="meta-title" /></label>
+          <label class="text-row">Author <input type="text" id="meta-author" /></label>
+          <label class="text-row">Subject <input type="text" id="meta-subject" /></label>
+          <label class="text-row">Keywords <input type="text" id="meta-keywords" placeholder="comma, separated" /></label>
+          <label class="text-row">Creator <input type="text" id="meta-creator" /></label>
+        </fieldset>
+      </div>
+
+      <div class="actions hidden" id="metadata-actions">
+        <button id="metadata-save" class="btn primary">Save PDF</button>
+        <button id="metadata-clear" class="btn ghost">Remove file</button>
+      </div>
+      <p id="metadata-status" class="status" role="status"></p>
+    </section>
+
   </main>
 
   <footer class="site-footer">
     <div class="container">
       <p>All processing happens locally in your browser using
-        <a href="https://pdf-lib.js.org/" target="_blank" rel="noopener">pdf-lib</a> and
-        <a href="https://mozilla.github.io/pdf.js/" target="_blank" rel="noopener">PDF.js</a>.
+        <a href="https://github.com/cantoo-scribe/pdf-lib" target="_blank" rel="noopener">pdf-lib</a>,
+        <a href="https://mozilla.github.io/pdf.js/" target="_blank" rel="noopener">PDF.js</a> and
+        <a href="https://tesseract.projectnaptha.com/" target="_blank" rel="noopener">Tesseract.js</a>.
         No files are uploaded anywhere.</p>
       <p>Open source on <a href="https://github.com/wahyuakbarwibowo/pdf" target="_blank" rel="noopener">GitHub</a>
         — built by <a href="https://github.com/wahyuakbarwibowo" target="_blank" rel="noopener">Wahyu Akbar Wibowo</a>.</p>
     </div>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.5.3/dist/pdf-lib.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="app.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/merge.js"></script>
+  <script src="js/split.js"></script>
+  <script src="js/reorder.js"></script>
+  <script src="js/compress.js"></script>
+  <script src="js/img2pdf.js"></script>
+  <script src="js/pdf2img.js"></script>
+  <script src="js/watermark.js"></script>
+  <script src="js/sign.js"></script>
+  <script src="js/ocr.js"></script>
+  <script src="js/protect.js"></script>
+  <script src="js/metadata.js"></script>
 </body>
 </html>
