@@ -53,7 +53,7 @@
     <button class="tab" data-tab="ocr" role="tab" aria-selected="false">🔎 OCR</button>
     <button class="tab" data-tab="protect" role="tab" aria-selected="false">🔐 Protect</button>
     <button class="tab" data-tab="metadata" role="tab" aria-selected="false">🏷️ Metadata</button>
-    <button class="tab" data-tab="addimage" role="tab" aria-selected="false">📌 Add Image</button>
+    <button class="tab" data-tab="addimage" role="tab" aria-selected="false">✏️ Edit</button>
   </nav>
 
   <main class="container">
@@ -401,54 +401,59 @@
       <p id="metadata-status" class="status" role="status"></p>
     </section>
 
-    <!-- ============ ADD IMAGE ============ -->
+    <!-- ============ EDIT (images + text) ============ -->
     <section id="panel-addimage" class="panel" role="tabpanel">
-      <div class="dropzone" id="addimage-dropzone">
-        <input type="file" id="addimage-input" accept="application/pdf,.pdf" hidden />
-        <p class="dz-icon">📌</p>
-        <p>Drop a PDF here or <button class="link-btn" data-for="addimage-input">browse</button></p>
-        <p class="dz-hint">Place an image at any position on the page — drag to move, drag handles to resize.</p>
+      <div class="dropzone" id="edit-dropzone">
+        <input type="file" id="edit-pdf-input" accept="application/pdf,.pdf" hidden />
+        <p class="dz-icon">✏️</p>
+        <p>Drop a PDF here or <button class="link-btn" data-for="edit-pdf-input">browse</button></p>
+        <p class="dz-hint">Add images and text on top of PDF pages.</p>
       </div>
 
-      <div id="addimage-workspace" class="hidden">
-        <div class="dropzone addimage-img-zone" id="addimage-img-zone">
-          <input type="file" id="addimage-img-input" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" hidden />
-          <p class="dz-icon" style="font-size:1.4rem;margin:0 0 0.25rem">🖼️</p>
-          <p>Drop image here or <button class="link-btn">browse</button></p>
-          <p class="dz-hint">PNG, JPEG, or WebP</p>
-        </div>
-        <div id="addimage-img-info" class="file-meta hidden">
-          Image: <strong id="addimage-img-name"></strong>
-          <button id="addimage-change-img" class="btn ghost" style="margin-left:0.75rem;padding:0.3rem 0.8rem;font-size:0.85rem">Change</button>
+      <div id="edit-workspace" class="hidden">
+        <div class="edit-toolbar">
+          <button id="edit-tool-select" class="edit-tool active">↖ Select</button>
+          <button id="edit-tool-text"   class="edit-tool">T&nbsp; Add Text</button>
+          <div class="edit-tool-sep"></div>
+          <label class="edit-tool">
+            🖼&nbsp; Add Image
+            <input type="file" id="edit-img-input" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" hidden />
+          </label>
+          <div style="flex:1"></div>
+          <button id="edit-delete" class="btn ghost" style="padding:0.45rem 0.9rem" disabled>✕ Delete</button>
         </div>
 
-        <p class="sign-label" style="margin-top:1rem">Drag to move &middot; Drag handles to resize &middot; Navigate with Prev / Next</p>
-
-        <div class="actions" style="margin-top:0.5rem">
-          <button id="addimage-prev" class="btn ghost">← Prev</button>
-          <span id="addimage-page-label" class="opt-hint"></span>
-          <button id="addimage-next" class="btn ghost">Next →</button>
+        <div id="edit-text-props" class="edit-text-props hidden">
+          <input type="text"   id="edit-text-input" placeholder="Text content…" />
+          <label>Size <input type="number" id="edit-font-size" value="24" min="6" max="200" /></label>
+          <label>Color <input type="color"  id="edit-text-color" value="#000000" /></label>
         </div>
-        <div id="addimage-preview-wrap"><canvas id="addimage-canvas"></canvas></div>
+
+        <div class="actions" style="margin-top:0.75rem">
+          <button id="edit-prev" class="btn ghost">← Prev</button>
+          <span id="edit-page-label" class="opt-hint"></span>
+          <button id="edit-next" class="btn ghost">Next →</button>
+        </div>
+        <div id="edit-preview-wrap"><canvas id="edit-canvas"></canvas></div>
 
         <div class="options" style="margin-top:1rem">
           <fieldset>
-            <legend>Apply image to</legend>
-            <label><input type="radio" name="addimage-pages" value="all" checked /> All pages</label>
-            <label><input type="radio" name="addimage-pages" value="current" /> Current page only</label>
+            <legend>Apply all edits to</legend>
+            <label><input type="radio" name="edit-pages" value="all" checked /> All pages</label>
+            <label><input type="radio" name="edit-pages" value="current" /> Current page only</label>
             <label style="align-items:center;flex-direction:row;gap:0.5rem">
-              <input type="radio" name="addimage-pages" value="range" /> Page range:
-              <input type="text" id="addimage-range" placeholder="e.g. 1-3, 5" style="width:auto;flex:1;max-width:200px" />
+              <input type="radio" name="edit-pages" value="range" /> Page range:
+              <input type="text" id="edit-range" placeholder="e.g. 1-3, 5" style="width:auto;flex:1;max-width:200px" />
             </label>
           </fieldset>
         </div>
 
         <div class="actions">
-          <button id="addimage-save" class="btn primary">Save PDF</button>
-          <button id="addimage-clear" class="btn ghost">Remove file</button>
+          <button id="edit-save"  class="btn primary">Save PDF</button>
+          <button id="edit-clear" class="btn ghost">Remove file</button>
         </div>
       </div>
-      <p id="addimage-status" class="status" role="status"></p>
+      <p id="edit-status" class="status" role="status"></p>
     </section>
 
   </main>
