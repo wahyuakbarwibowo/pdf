@@ -53,6 +53,7 @@
     <button class="tab" data-tab="ocr" role="tab" aria-selected="false">🔎 OCR</button>
     <button class="tab" data-tab="protect" role="tab" aria-selected="false">🔐 Protect</button>
     <button class="tab" data-tab="metadata" role="tab" aria-selected="false">🏷️ Metadata</button>
+    <button class="tab" data-tab="addimage" role="tab" aria-selected="false">📌 Add Image</button>
   </nav>
 
   <main class="container">
@@ -400,6 +401,56 @@
       <p id="metadata-status" class="status" role="status"></p>
     </section>
 
+    <!-- ============ ADD IMAGE ============ -->
+    <section id="panel-addimage" class="panel" role="tabpanel">
+      <div class="dropzone" id="addimage-dropzone">
+        <input type="file" id="addimage-input" accept="application/pdf,.pdf" hidden />
+        <p class="dz-icon">📌</p>
+        <p>Drop a PDF here or <button class="link-btn" data-for="addimage-input">browse</button></p>
+        <p class="dz-hint">Place an image at any position on the page — drag to move, drag handles to resize.</p>
+      </div>
+
+      <div id="addimage-workspace" class="hidden">
+        <div class="dropzone addimage-img-zone" id="addimage-img-zone">
+          <input type="file" id="addimage-img-input" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" hidden />
+          <p class="dz-icon" style="font-size:1.4rem;margin:0 0 0.25rem">🖼️</p>
+          <p>Drop image here or <button class="link-btn">browse</button></p>
+          <p class="dz-hint">PNG, JPEG, or WebP</p>
+        </div>
+        <div id="addimage-img-info" class="file-meta hidden">
+          Image: <strong id="addimage-img-name"></strong>
+          <button id="addimage-change-img" class="btn ghost" style="margin-left:0.75rem;padding:0.3rem 0.8rem;font-size:0.85rem">Change</button>
+        </div>
+
+        <p class="sign-label" style="margin-top:1rem">Drag to move &middot; Drag handles to resize &middot; Navigate with Prev / Next</p>
+
+        <div class="actions" style="margin-top:0.5rem">
+          <button id="addimage-prev" class="btn ghost">← Prev</button>
+          <span id="addimage-page-label" class="opt-hint"></span>
+          <button id="addimage-next" class="btn ghost">Next →</button>
+        </div>
+        <div id="addimage-preview-wrap"><canvas id="addimage-canvas"></canvas></div>
+
+        <div class="options" style="margin-top:1rem">
+          <fieldset>
+            <legend>Apply image to</legend>
+            <label><input type="radio" name="addimage-pages" value="all" checked /> All pages</label>
+            <label><input type="radio" name="addimage-pages" value="current" /> Current page only</label>
+            <label style="align-items:center;flex-direction:row;gap:0.5rem">
+              <input type="radio" name="addimage-pages" value="range" /> Page range:
+              <input type="text" id="addimage-range" placeholder="e.g. 1-3, 5" style="width:auto;flex:1;max-width:200px" />
+            </label>
+          </fieldset>
+        </div>
+
+        <div class="actions">
+          <button id="addimage-save" class="btn primary">Save PDF</button>
+          <button id="addimage-clear" class="btn ghost">Remove file</button>
+        </div>
+      </div>
+      <p id="addimage-status" class="status" role="status"></p>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -429,5 +480,6 @@
   <script src="js/ocr.js"></script>
   <script src="js/protect.js"></script>
   <script src="js/metadata.js"></script>
+  <script src="js/addimage.js"></script>
 </body>
 </html>

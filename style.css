@@ -274,7 +274,8 @@ main.container { flex: 1; }
   cursor: crosshair;
   max-width: 100%;
 }
-#sign-preview-wrap {
+#sign-preview-wrap,
+#addimage-preview-wrap {
   margin-top: 0.75rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -283,6 +284,13 @@ main.container { flex: 1; }
   text-align: center;
 }
 #sign-preview { max-width: 100%; height: auto; cursor: copy; display: inline-block; }
+#addimage-canvas { max-width: 100%; height: auto; display: inline-block; touch-action: none; }
+
+.addimage-img-zone {
+  padding: 1.2rem 1rem;
+  margin-top: 1.25rem;
+}
+.addimage-img-zone p { margin: 0; font-size: 0.9rem; }
 #sign-width { vertical-align: middle; }
 
 /* ---------- OCR result ---------- */
