@@ -6,33 +6,10 @@
   const state = { name: null, bytes: null, pageCount: 0 };
   const status = $('ocr-status');
 
-  setupDropzone('ocr-dropzone', 'ocr-input', async (files) => {
-    const file = files[0];
-    try {
-      const bytes = new Uint8Array(await file.arrayBuffer());
-      const doc = await PDFDocument.load(bytes, { ignoreEncryption: true });
-      state.name = file.name;
-      state.bytes = bytes;
-      state.pageCount = doc.getPageCount();
-      $('ocr-meta').classList.remove('hidden');
-      $('ocr-meta').innerHTML =
-        `<strong>${file.name}</strong> — ${state.pageCount} pages, ${formatBytes(file.size)}`;
-      $('ocr-options').classList.remove('hidden');
-      $('ocr-actions').classList.remove('hidden');
-      $('ocr-result-wrap').classList.add('hidden');
-      setStatus(status, '');
-    } catch (err) {
-      setStatus(status, `Could not read "${file.name}": ${err.message}`, 'error');
-    }
-  });
+  setupPdfPanel('ocr', state, status, () => $('ocr-result-wrap').classList.add('hidden'));
 
-  $('ocr-clear').addEventListener('click', () => {
-    state.name = null;
-    state.bytes = null;
-    ['ocr-meta', 'ocr-options', 'ocr-actions', 'ocr-result-wrap']
-      .forEach((id) => $(id).classList.add('hidden'));
-    setStatus(status, '');
-  });
+  $('ocr-clear').addEventListener('click', () =>
+    resetPdfPanel('ocr', state, status, ['ocr-result-wrap']));
 
   $('ocr-btn').addEventListener('click', async () => {
     if (!state.bytes) return;

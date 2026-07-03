@@ -108,6 +108,39 @@ function makeSortable(container, items, render) {
   });
 }
 
+/* Wire a single-PDF panel: dropzone reads the file, loads it, stores state, fills
+   #<prefix>-meta, and reveals #<prefix>-options / #<prefix>-actions.
+   onReady(doc, file) runs after, for panel-specific setup. */
+function setupPdfPanel(prefix, state, status, onReady, loadOpts = { ignoreEncryption: true }) {
+  setupDropzone(`${prefix}-dropzone`, `${prefix}-input`, async (files) => {
+    const file = files[0];
+    try {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const doc = await PDFDocument.load(bytes, loadOpts);
+      state.name = file.name;
+      state.bytes = bytes;
+      state.pageCount = doc.getPageCount();
+      $(`${prefix}-meta`).innerHTML =
+        `<strong>${file.name}</strong> — ${state.pageCount} pages, ${formatBytes(file.size)}`;
+      [`${prefix}-meta`, `${prefix}-options`, `${prefix}-actions`]
+        .forEach((id) => $(id).classList.remove('hidden'));
+      setStatus(status, '');
+      if (onReady) onReady(doc, file);
+    } catch (err) {
+      setStatus(status, `Could not read "${file.name}": ${err.message}`, 'error');
+    }
+  });
+}
+
+/* Reset a single-PDF panel: null state.name/bytes and hide its sections. */
+function resetPdfPanel(prefix, state, status, extra = []) {
+  state.name = null;
+  state.bytes = null;
+  [`${prefix}-meta`, `${prefix}-options`, `${prefix}-actions`, ...extra]
+    .forEach((id) => $(id).classList.add('hidden'));
+  setStatus(status, '');
+}
+
 /* Render one pdf.js page to a canvas at the given scale. Returns the canvas. */
 async function renderPageToCanvas(page, scale, background = '#fff') {
   const vp = page.getViewport({ scale });

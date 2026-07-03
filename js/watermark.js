@@ -5,31 +5,9 @@
   const state = { name: null, bytes: null, pageCount: 0 };
   const status = $('watermark-status');
 
-  setupDropzone('watermark-dropzone', 'watermark-input', async (files) => {
-    const file = files[0];
-    try {
-      const bytes = new Uint8Array(await file.arrayBuffer());
-      const doc = await PDFDocument.load(bytes, { ignoreEncryption: true });
-      state.name = file.name;
-      state.bytes = bytes;
-      state.pageCount = doc.getPageCount();
-      $('watermark-meta').classList.remove('hidden');
-      $('watermark-meta').innerHTML =
-        `<strong>${file.name}</strong> — ${state.pageCount} pages, ${formatBytes(file.size)}`;
-      $('watermark-options').classList.remove('hidden');
-      $('watermark-actions').classList.remove('hidden');
-      setStatus(status, '');
-    } catch (err) {
-      setStatus(status, `Could not read "${file.name}": ${err.message}`, 'error');
-    }
-  });
+  setupPdfPanel('watermark', state, status);
 
-  $('watermark-clear').addEventListener('click', () => {
-    state.name = null;
-    state.bytes = null;
-    ['watermark-meta', 'watermark-options', 'watermark-actions'].forEach((id) => $(id).classList.add('hidden'));
-    setStatus(status, '');
-  });
+  $('watermark-clear').addEventListener('click', () => resetPdfPanel('watermark', state, status));
 
   $('watermark-btn').addEventListener('click', async () => {
     if (!state.bytes) return;

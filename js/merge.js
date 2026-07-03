@@ -18,8 +18,6 @@
         <span class="file-name" title="${f.name}">${f.name}</span>
         <span class="file-pages">${f.pageCount} page${f.pageCount === 1 ? '' : 's'}</span>
         <span class="file-size">${formatBytes(f.size)}</span>
-        <button class="icon-btn" data-action="up" title="Move up">↑</button>
-        <button class="icon-btn" data-action="down" title="Move down">↓</button>
         <button class="icon-btn remove" data-action="remove" title="Remove">✕</button>
       `;
       mergeList.appendChild(li);
@@ -29,13 +27,9 @@
   }
 
   mergeList.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-action]');
+    const btn = e.target.closest('button[data-action="remove"]');
     if (!btn) return;
-    const i = Number(btn.closest('.file-item').dataset.index);
-    const action = btn.dataset.action;
-    if (action === 'remove') mergeFiles.splice(i, 1);
-    else if (action === 'up' && i > 0) [mergeFiles[i - 1], mergeFiles[i]] = [mergeFiles[i], mergeFiles[i - 1]];
-    else if (action === 'down' && i < mergeFiles.length - 1) [mergeFiles[i + 1], mergeFiles[i]] = [mergeFiles[i], mergeFiles[i + 1]];
+    mergeFiles.splice(Number(btn.closest('.file-item').dataset.index), 1);
     renderMergeList();
   });
 

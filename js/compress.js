@@ -12,33 +12,13 @@
   const state = { name: null, size: 0, bytes: null };
   const status = $('compress-status');
 
-  setupDropzone('compress-dropzone', 'compress-input', async (files) => {
-    const file = files[0];
-    try {
-      const bytes = new Uint8Array(await file.arrayBuffer());
-      const doc = await PDFDocument.load(bytes, { ignoreEncryption: true });
-      state.name = file.name;
-      state.size = file.size;
-      state.bytes = bytes;
-      $('compress-meta').classList.remove('hidden');
-      $('compress-meta').innerHTML =
-        `<strong>${file.name}</strong> — ${doc.getPageCount()} pages, ${formatBytes(file.size)}`;
-      $('compress-options').classList.remove('hidden');
-      $('compress-actions').classList.remove('hidden');
-      $('compress-result').classList.add('hidden');
-      setStatus(status, '');
-    } catch (err) {
-      setStatus(status, `Could not read "${file.name}": ${err.message}`, 'error');
-    }
+  setupPdfPanel('compress', state, status, (doc, file) => {
+    state.size = file.size;
+    $('compress-result').classList.add('hidden');
   });
 
-  $('compress-clear').addEventListener('click', () => {
-    state.name = null;
-    state.bytes = null;
-    ['compress-meta', 'compress-options', 'compress-actions', 'compress-result']
-      .forEach((id) => $(id).classList.add('hidden'));
-    setStatus(status, '');
-  });
+  $('compress-clear').addEventListener('click', () =>
+    resetPdfPanel('compress', state, status, ['compress-result']));
 
   $('compress-btn').addEventListener('click', async () => {
     if (!state.bytes) return;

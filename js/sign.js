@@ -88,14 +88,11 @@
     if (!state.pdf) return;
     const page = await state.pdf.getPage(state.current + 1);
     const base = page.getViewport({ scale: 1 });
-    const scale = Math.min(1.5, 700 / base.width);
-    const vp = page.getViewport({ scale });
-    preview.width = Math.ceil(vp.width);
-    preview.height = Math.ceil(vp.height);
+    const rendered = await renderPageToCanvas(page, Math.min(1.5, 700 / base.width));
+    preview.width = rendered.width;
+    preview.height = rendered.height;
     const ctx = preview.getContext('2d');
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(0, 0, preview.width, preview.height);
-    await page.render({ canvasContext: ctx, viewport: vp }).promise;
+    ctx.drawImage(rendered, 0, 0);
 
     // Composite placed signatures for this page.
     const sig = trimmedSignature();

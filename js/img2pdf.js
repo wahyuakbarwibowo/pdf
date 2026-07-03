@@ -20,8 +20,6 @@
         <img class="file-thumb" src="${img.dataUrl}" alt="" draggable="false" />
         <span class="file-name" title="${img.name}">${img.name}</span>
         <span class="file-size">${img.width}×${img.height}</span>
-        <button class="icon-btn" data-action="up" title="Move up">↑</button>
-        <button class="icon-btn" data-action="down" title="Move down">↓</button>
         <button class="icon-btn remove" data-action="remove" title="Remove">✕</button>
       `;
       list.appendChild(li);
@@ -32,13 +30,9 @@
   }
 
   list.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-action]');
+    const btn = e.target.closest('button[data-action="remove"]');
     if (!btn) return;
-    const i = Number(btn.closest('.file-item').dataset.index);
-    const action = btn.dataset.action;
-    if (action === 'remove') images.splice(i, 1);
-    else if (action === 'up' && i > 0) [images[i - 1], images[i]] = [images[i], images[i - 1]];
-    else if (action === 'down' && i < images.length - 1) [images[i + 1], images[i]] = [images[i], images[i + 1]];
+    images.splice(Number(btn.closest('.file-item').dataset.index), 1);
     render();
   });
 

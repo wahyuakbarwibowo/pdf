@@ -5,35 +5,9 @@
   const state = { name: null, bytes: null, pageCount: 0 };
   const status = $('pdf2img-status');
 
-  setupDropzone('pdf2img-dropzone', 'pdf2img-input', async (files) => {
-    const file = files[0];
-    try {
-      const bytes = new Uint8Array(await file.arrayBuffer());
-      const doc = await PDFDocument.load(bytes, { ignoreEncryption: true });
-      state.name = file.name;
-      state.bytes = bytes;
-      state.pageCount = doc.getPageCount();
-      $('pdf2img-meta').classList.remove('hidden');
-      $('pdf2img-meta').innerHTML =
-        `<strong>${file.name}</strong> — ${state.pageCount} pages, ${formatBytes(file.size)}`;
-      $('pdf2img-options').classList.remove('hidden');
-      $('pdf2img-actions').classList.remove('hidden');
-      setStatus(status, '');
-    } catch (err) {
-      setStatus(status, `Could not read "${file.name}": ${err.message}`, 'error');
-    }
-  });
+  setupPdfPanel('pdf2img', state, status);
 
-  $('pdf2img-clear').addEventListener('click', () => {
-    state.name = null;
-    state.bytes = null;
-    ['pdf2img-meta', 'pdf2img-options', 'pdf2img-actions'].forEach((id) => $(id).classList.add('hidden'));
-    setStatus(status, '');
-  });
-
-  function canvasToBlob(canvas, type, quality) {
-    return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
-  }
+  $('pdf2img-clear').addEventListener('click', () => resetPdfPanel('pdf2img', state, status));
 
   $('pdf2img-btn').addEventListener('click', async () => {
     if (!state.bytes) return;
@@ -52,7 +26,7 @@
         setStatus(status, `Rendering page ${n} / ${pdf.numPages}…`);
         const page = await pdf.getPage(n);
         const canvas = await renderPageToCanvas(page, scale);
-        blobs.push(await canvasToBlob(canvas, mime, 0.9));
+        blobs.push(await new Promise((resolve) => canvas.toBlob(resolve, mime, 0.9)));
         canvas.width = canvas.height = 0;
       }
       await pdf.destroy();

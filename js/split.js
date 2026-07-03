@@ -5,33 +5,12 @@
   const state = { name: null, bytes: null, pageCount: 0 };
   const status = $('split-status');
 
-  setupDropzone('split-dropzone', 'split-input', async (files) => {
-    const file = files[0];
-    try {
-      const bytes = new Uint8Array(await file.arrayBuffer());
-      const doc = await PDFDocument.load(bytes, { ignoreEncryption: true });
-      state.name = file.name;
-      state.bytes = bytes;
-      state.pageCount = doc.getPageCount();
-      $('split-meta').classList.remove('hidden');
-      $('split-meta').innerHTML =
-        `<strong>${file.name}</strong> — ${state.pageCount} pages, ${formatBytes(file.size)}`;
-      $('split-options').classList.remove('hidden');
-      $('split-actions').classList.remove('hidden');
-      $('split-range').value = '';
-      $('split-range').placeholder = `e.g. 1-${Math.min(3, state.pageCount)}, ${state.pageCount}`;
-      setStatus(status, '');
-    } catch (err) {
-      setStatus(status, `Could not read "${file.name}": ${err.message}`, 'error');
-    }
+  setupPdfPanel('split', state, status, () => {
+    $('split-range').value = '';
+    $('split-range').placeholder = `e.g. 1-${Math.min(3, state.pageCount)}, ${state.pageCount}`;
   });
 
-  $('split-clear').addEventListener('click', () => {
-    state.name = null;
-    state.bytes = null;
-    ['split-meta', 'split-options', 'split-actions'].forEach((id) => $(id).classList.add('hidden'));
-    setStatus(status, '');
-  });
+  $('split-clear').addEventListener('click', () => resetPdfPanel('split', state, status));
 
   $('split-extract').addEventListener('click', async () => {
     if (!state.bytes) return;

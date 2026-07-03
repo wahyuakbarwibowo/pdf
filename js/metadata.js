@@ -5,37 +5,15 @@
   const state = { name: null, bytes: null };
   const status = $('metadata-status');
 
-  setupDropzone('metadata-dropzone', 'metadata-input', async (files) => {
-    const file = files[0];
-    try {
-      const bytes = new Uint8Array(await file.arrayBuffer());
-      const doc = await PDFDocument.load(bytes, { ignoreEncryption: true, updateMetadata: false });
-      state.name = file.name;
-      state.bytes = bytes;
+  setupPdfPanel('metadata', state, status, (doc) => {
+    $('meta-title').value = doc.getTitle() || '';
+    $('meta-author').value = doc.getAuthor() || '';
+    $('meta-subject').value = doc.getSubject() || '';
+    $('meta-keywords').value = doc.getKeywords() || '';
+    $('meta-creator').value = doc.getCreator() || '';
+  }, { ignoreEncryption: true, updateMetadata: false });
 
-      $('meta-title').value = doc.getTitle() || '';
-      $('meta-author').value = doc.getAuthor() || '';
-      $('meta-subject').value = doc.getSubject() || '';
-      $('meta-keywords').value = doc.getKeywords() || '';
-      $('meta-creator').value = doc.getCreator() || '';
-
-      $('metadata-meta').classList.remove('hidden');
-      $('metadata-meta').innerHTML =
-        `<strong>${file.name}</strong> — ${doc.getPageCount()} pages, ${formatBytes(file.size)}`;
-      $('metadata-options').classList.remove('hidden');
-      $('metadata-actions').classList.remove('hidden');
-      setStatus(status, '');
-    } catch (err) {
-      setStatus(status, `Could not read "${file.name}": ${err.message}`, 'error');
-    }
-  });
-
-  $('metadata-clear').addEventListener('click', () => {
-    state.name = null;
-    state.bytes = null;
-    ['metadata-meta', 'metadata-options', 'metadata-actions'].forEach((id) => $(id).classList.add('hidden'));
-    setStatus(status, '');
-  });
+  $('metadata-clear').addEventListener('click', () => resetPdfPanel('metadata', state, status));
 
   $('metadata-save').addEventListener('click', async () => {
     if (!state.bytes) return;

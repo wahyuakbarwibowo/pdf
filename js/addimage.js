@@ -113,15 +113,8 @@
     const page = await state.pdfJs.getPage(state.current + 1);
     const base = page.getViewport({ scale: 1 });
     state.scale = Math.min(1.5, 700 / base.width);
-    const vp = page.getViewport({ scale: state.scale });
 
-    const off = document.createElement('canvas');
-    off.width  = Math.ceil(vp.width);
-    off.height = Math.ceil(vp.height);
-    const offCtx = off.getContext('2d');
-    offCtx.fillStyle = '#fff';
-    offCtx.fillRect(0, 0, off.width, off.height);
-    await page.render({ canvasContext: offCtx, viewport: vp }).promise;
+    const off = await renderPageToCanvas(page, state.scale);
     state.pageCanvas = off;
     canvas.width  = off.width;
     canvas.height = off.height;
