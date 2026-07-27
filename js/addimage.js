@@ -13,9 +13,9 @@
 
   const state = {
     name: null, bytes: null, pdfJs: null, pageCount: 0, current: 0, scale: 1,
-    items: [],      // {type:'image'|'text', rx, ry, ...}
+    items: [],      // {type:'image'|'text'|'white', rx, ry, ...}
     selected: -1,
-    tool: 'select', // 'select' | 'addtext'
+    tool: 'select', // 'select' | 'addtext' | 'addwhite'
     drag: null,
     pageCanvas: null,
   };
@@ -30,7 +30,7 @@
   // Images also have rw,rh. Text height is derived from fontSize*scale.
   function getBBox(item) {
     const W = canvas.width, H = canvas.height;
-    if (item.type === 'image') {
+    if (item.type === 'image' || item.type === 'white') {
       return { x: item.rx * W, y: item.ry * H, w: item.rw * W, h: item.rh * H };
     }
     // text: measure using canvas to get pixel-accurate width
@@ -71,8 +71,13 @@
     const W = canvas.width, H = canvas.height;
 
     state.items.forEach((item, i) => {
-      if (item.type === 'image') {
-        ctx.drawImage(item.imgEl, item.rx * W, item.ry * H, item.rw * W, item.rh * H);
+      if (item.type === 'image' || item.type === 'white') {
+        if (item.type === 'white') {
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(item.rx * W, item.ry * H, item.rw * W, item.rh * H);
+        } else {
+          ctx.drawImage(item.imgEl, item.rx * W, item.ry * H, item.rw * W, item.rh * H);
+        }
         if (i === state.selected) {
           const b = getBBox(item);
           ctx.strokeStyle = '#4f8cff';
@@ -135,7 +140,7 @@
   function hitHandle(cx, cy) {
     if (state.selected < 0) return null;
     const item = state.items[state.selected];
-    if (item.type !== 'image') return null;
+    if (item.type !== 'image' && item.type !== 'white') return null;
     const positions = handlePositions(getBBox(item));
     for (let i = 0; i < positions.length; i++) {
       const [hx, hy] = positions[i];
@@ -188,6 +193,13 @@
       return;
     }
 
+    if (state.tool === 'addwhite') {
+      state.items.push({ type: 'white', rx: cx / W, ry: cy / H, rw: 0, rh: 0 });
+      state.selected = state.items.length - 1;
+      state.drag = { mode: 'draw', startX: cx, startY: cy };
+      return;
+    }
+
     const handle = hitHandle(cx, cy);
     if (handle) {
       const b = getBBox(state.items[state.selected]);
@@ -199,7 +211,7 @@
     if (hit >= 0) {
       state.selected = hit;
       const item = state.items[hit];
-      state.drag = item.type === 'image'
+      state.drag = (item.type === 'image' || item.type === 'white')
         ? { mode: 'move',     startX: cx, startY: cy, orig: { ...getBBox(item) } }
         : { mode: 'movetext', startX: cx, startY: cy, origRx: item.rx, origRy: item.ry };
       updateUI();
@@ -231,17 +243,35 @@
         const r = applyResize(state.drag.handle, state.drag.orig, dx, dy);
         item.rx = r.x / W; item.ry = r.y / H;
         item.rw = r.w / W; item.rh = r.h / H;
+      } else if (state.drag.mode === 'draw') {
+        item.rx = Math.min(state.drag.startX, cx) / W;
+        item.ry = Math.min(state.drag.startY, cy) / H;
+        item.rw = Math.abs(cx - state.drag.startX) / W;
+        item.rh = Math.abs(cy - state.drag.startY) / H;
       }
       redraw();
       return;
     }
 
-    if (state.tool === 'addtext') { canvas.style.cursor = 'crosshair'; return; }
+    if (state.tool === 'addtext' || state.tool === 'addwhite') { canvas.style.cursor = 'crosshair'; return; }
     const handle = hitHandle(cx, cy);
     canvas.style.cursor = handle ? CURSOR_MAP[handle] : hitItem(cx, cy) >= 0 ? 'move' : 'default';
   });
 
-  canvas.addEventListener('pointerup', () => { state.drag = null; });
+  canvas.addEventListener('pointerup', () => {
+    if (state.drag?.mode === 'draw') {
+      const item = state.items[state.selected];
+      if (item.rw * canvas.width < 4 || item.rh * canvas.height < 4) {
+        state.items.splice(state.selected, 1);
+        state.selected = -1;
+      } else {
+        setTool('select');
+      }
+      updateUI();
+      redraw();
+    }
+    state.drag = null;
+  });
 
   /* ---- Tool + UI state ---- */
 
@@ -249,7 +279,8 @@
     state.tool = t;
     $('edit-tool-select').classList.toggle('active', t === 'select');
     $('edit-tool-text').classList.toggle('active',   t === 'addtext');
-    canvas.style.cursor = t === 'addtext' ? 'crosshair' : 'default';
+    $('edit-tool-white').classList.toggle('active',  t === 'addwhite');
+    canvas.style.cursor = (t === 'addtext' || t === 'addwhite') ? 'crosshair' : 'default';
     updateTextProps();
   }
 
@@ -285,6 +316,7 @@
 
   $('edit-tool-select').addEventListener('click', () => setTool('select'));
   $('edit-tool-text').addEventListener('click',   () => setTool('addtext'));
+  $('edit-tool-white').addEventListener('click',  () => setTool('addwhite'));
 
   $('edit-delete').addEventListener('click', () => {
     if (state.selected < 0) return;
@@ -360,7 +392,7 @@
 
   $('edit-save').addEventListener('click', async () => {
     if (!state.bytes)        { setStatus(status, 'Load a PDF first.', 'error'); return; }
-    if (!state.items.length) { setStatus(status, 'Add at least one image or text first.', 'error'); return; }
+    if (!state.items.length) { setStatus(status, 'Add at least one image, text, or whiteout first.', 'error'); return; }
 
     const btn = $('edit-save');
     btn.disabled = true;
@@ -399,7 +431,15 @@
         const { width: pw, height: ph } = page.getSize();
 
         for (const item of state.items) {
-          if (item.type === 'image') {
+          if (item.type === 'white') {
+            page.drawRectangle({
+              x:      item.rx * pw,
+              y:      (1 - item.ry - item.rh) * ph,
+              width:  item.rw * pw,
+              height: item.rh * ph,
+              color:  rgb(1, 1, 1),
+            });
+          } else if (item.type === 'image') {
             page.drawImage(imgMap.get(item), {
               x:      item.rx * pw,
               y:      (1 - item.ry - item.rh) * ph,
