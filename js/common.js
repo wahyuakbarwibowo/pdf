@@ -195,15 +195,25 @@ function parsePageRange(text, maxPage) {
 }
 
 /* ============ Tabs ============ */
+function activateTab(name) {
+  const tab = document.querySelector(`.tab[data-tab="${name}"]`);
+  if (!tab) return false;
+  document.querySelectorAll('.tab').forEach((t) => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected', 'false');
+  });
+  document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
+  tab.classList.add('active');
+  tab.setAttribute('aria-selected', 'true');
+  $('panel-' + name).classList.add('active');
+  return true;
+}
+
 document.querySelectorAll('.tab').forEach((tab) => {
   tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach((t) => {
-      t.classList.remove('active');
-      t.setAttribute('aria-selected', 'false');
-    });
-    document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
-    tab.classList.add('active');
-    tab.setAttribute('aria-selected', 'true');
-    $('panel-' + tab.dataset.tab).classList.add('active');
+    activateTab(tab.dataset.tab);
+    history.replaceState(null, '', '#' + tab.dataset.tab);
   });
 });
+
+if (!activateTab(location.hash.slice(1))) activateTab('merge');
