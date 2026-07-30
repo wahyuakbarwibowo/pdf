@@ -54,6 +54,8 @@
     <button class="tab" data-tab="protect" role="tab" aria-selected="false">🔐 Protect</button>
     <button class="tab" data-tab="metadata" role="tab" aria-selected="false">🏷️ Metadata</button>
     <button class="tab" data-tab="addimage" role="tab" aria-selected="false">✏️ Edit</button>
+    <button class="tab" data-tab="pdf2word" role="tab" aria-selected="false">📝 PDF → Word</button>
+    <button class="tab" data-tab="word2pdf" role="tab" aria-selected="false">📄 Word → PDF</button>
   </nav>
 
   <main class="container">
@@ -457,6 +459,42 @@
       <p id="edit-status" class="status" role="status"></p>
     </section>
 
+    <!-- ============ PDF -> WORD ============ -->
+    <section id="panel-pdf2word" class="panel" role="tabpanel">
+      <div class="dropzone" id="pdf2word-dropzone">
+        <input type="file" id="pdf2word-input" accept="application/pdf,.pdf" hidden />
+        <p class="dz-icon">📝</p>
+        <p>Drop a PDF here or <button class="link-btn">browse</button></p>
+        <p class="dz-hint">Extracts text into a .docx. Layout, tables and images are not preserved — use for text, not a visual replica.</p>
+      </div>
+
+      <div id="pdf2word-meta" class="file-meta hidden"></div>
+
+      <div class="actions hidden" id="pdf2word-actions">
+        <button id="pdf2word-btn" class="btn primary">Convert to Word</button>
+        <button id="pdf2word-clear" class="btn ghost">Remove file</button>
+      </div>
+      <p id="pdf2word-status" class="status" role="status"></p>
+    </section>
+
+    <!-- ============ WORD -> PDF ============ -->
+    <section id="panel-word2pdf" class="panel" role="tabpanel">
+      <div class="dropzone" id="word2pdf-dropzone">
+        <input type="file" id="word2pdf-input" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
+        <p class="dz-icon">📄</p>
+        <p>Drop a .docx here or <button class="link-btn">browse</button></p>
+        <p class="dz-hint">Basic formatting (headings, bold, lists) is preserved. Complex layouts may not render pixel-exact.</p>
+      </div>
+
+      <div id="word2pdf-meta" class="file-meta hidden"></div>
+
+      <div class="actions hidden" id="word2pdf-actions">
+        <button id="word2pdf-btn" class="btn primary">Convert to PDF</button>
+        <button id="word2pdf-clear" class="btn ghost">Remove file</button>
+      </div>
+      <p id="word2pdf-status" class="status" role="status"></p>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -487,5 +525,7 @@
   <script src="js/protect.js"></script>
   <script src="js/metadata.js"></script>
   <script src="js/addimage.js"></script>
+  <script src="js/pdf2word.js"></script>
+  <script src="js/word2pdf.js"></script>
 </body>
 </html>
