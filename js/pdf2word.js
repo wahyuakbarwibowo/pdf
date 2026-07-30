@@ -3,7 +3,7 @@
 'use strict';
 
 (() => {
-  const DOCX_SRC = 'https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.umd.cjs';
+  const DOCX_SRC = 'https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js';
   const state = { name: null, bytes: null, pageCount: 0 };
   const status = $('pdf2word-status');
 
